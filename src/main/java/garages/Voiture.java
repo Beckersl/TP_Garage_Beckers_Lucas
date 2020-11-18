@@ -3,10 +3,12 @@ package garages;
 import java.io.PrintStream;
 import java.util.*;
 
+
 public class Voiture {
 
 	private final String immatriculation;
-	private final List<Stationnement> myStationnements = new LinkedList<>();
+	private final LinkedList<Stationnement> myStationnements = new LinkedList<>();
+        private boolean estAuGarage = false; 
 
 	public Voiture(String i) {
 		if (null == i) {
@@ -29,8 +31,12 @@ public class Voiture {
 	 */
 	public void entreAuGarage(Garage g) throws Exception {
 		// Et si la voiture est déjà dans un garage ?
+                if (estAuGarage == true) {
+			throw new IllegalArgumentException("La voiture est déja au Garage");
+		}
 		Stationnement s = new Stationnement(this, g);
 		myStationnements.add(s);
+                estAuGarage = true;
 	}
 
 	/**
@@ -40,27 +46,37 @@ public class Voiture {
 	 * @throws java.lang.Exception si la voiture n'est pas dans un garage
 	 */
 	public void sortDuGarage() throws Exception {
-		throw new UnsupportedOperationException("Pas encore implémenté");
+                if (estAuGarage == false){
+                    throw new IllegalArgumentException("La voiture est déja au Garage");
+                }
+            
 		// TODO: Implémenter cette méthode
-		// Trouver le dernier stationnement de la voiture
+                estAuGarage = false;
+                // Trouver le dernier stationnement de la voiture
+                myStationnements.getLast().terminer();
 		// Terminer ce stationnement
-	}
-
+	
+            
+        }
 	/**
 	 * @return l'ensemble des garages visités par cette voiture
 	 */
 	public Set<Garage> garagesVisites() {
 		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+                Set<Garage> garagesVisites = new HashSet();
+                
+                for(Stationnement n : myStationnements){
+                    garagesVisites.add(n.getGarage());
+                }
+                return garagesVisites;
 	}
 
 	/**
 	 * @return vrai si la voiture est dans un garage, faux sinon
 	 */
 	public boolean estDansUnGarage() {
-		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
-		// Vrai si le dernier stationnement est en cours
+		
+		return estAuGarage;
 	}
 
 	/**
@@ -79,7 +95,19 @@ public class Voiture {
 	 */
 	public void imprimeStationnements(PrintStream out) {
 		// TODO: Implémenter cette méthode
-		throw new UnsupportedOperationException("Pas encore implémenté");
+                Collections.sort(myStationnements, Stationnement.ComparatorNom);
+                Garage garage = new Garage("o");
+                for(Stationnement n : myStationnements){
+                    
+                    if (garage == n.getGarage()) {
+                        System.out.println(n);
+                    }
+                    else {
+                       System.out.println("Garage " + n.getGarage().getName() + ":\n" + n); 
+                    }
+                    garage = n.getGarage();
+                }
+
 	}
 
 }

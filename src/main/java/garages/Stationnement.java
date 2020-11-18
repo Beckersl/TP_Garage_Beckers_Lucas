@@ -1,7 +1,9 @@
 package garages;
 
 import java.text.SimpleDateFormat;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.Objects;
 
 public class Stationnement {
 
@@ -48,5 +50,37 @@ public class Stationnement {
 			estEnCours() ? "en cours" : "sortie=" + dateFormat.format(fin)
 		);
 	}
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 23 * hash + Objects.hashCode(this.myGarage);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Stationnement other = (Stationnement) obj;
+        if (!Objects.equals(this.myGarage, other.myGarage)) {
+            return false;
+        }
+        return true;
+    }
+        public static Comparator<Stationnement> ComparatorNom = new Comparator<Stationnement>() {
+      
+        @Override
+        public int compare(Stationnement e1, Stationnement e2) {
+            return e1.getGarage().compareTo(e2.getGarage());
+        }
+    };
 
 }
